@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Thanh Toán Hàng - Quản Lý Nhà Cung Cấp</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-image: url('https://res.cloudinary.com/dwc0l2bty/image/upload/v1744347430/snapedit_1744347405949_eluizm.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: #4a5568;
+      box-sizing: border-box;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+    }
+
+    h2 {
+      color: #5a3e36;
+      margin-bottom: 30px;
+      font-size: 33px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      position: relative;
+      display: inline-block;
+      padding-bottom: 10px;
+      text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1), 0 0 25px rgba(0, 0, 0, 0.1);
+    }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background-color: #a1866f;
+      border-radius: 2px;
+    }
+
+    input,
+    select {
+      padding: 10px;
+      border: 1px solid #cbd5e0;
+      border-radius: 8px;
+      font-size: 15px;
+      background-color: #edf2f7;
+      width: 100%;
+    }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+        }
+
+        th {
+            background-color: #ebf8ff;
+            color: #2c5282;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            background-color: #4299e1;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background-color: #3182ce;
+        }
+
+        .total {
+            text-align: right;
+            margin-top: 20px;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .payment-status {
+            margin-top: 20px;
+        }
+
+        .required {
+            color: red;
+        }
+
+        .form-group > input {
+            width: 97.5%;
+        }
+
+        .form-group > input, select {
+      margin-top: 0.5rem;
+    }
+
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+
+            #printSection,
+            #printSection * {
+                visibility: visible;
+            }
+
+            #printSection {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+            }
+
+            .btn,
+            #inputTable {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Thanh Toán Hàng - Shop Thời Trang IconDenim</h2>
+
+        <div class="form-group">
+            <label for="supplier">Nhà Cung Cấp <span class="required">*</span></label>
+            <select id="supplier">
+                <option value="Supplier 1">Công ty Vải May</option>
+                <option value="Supplier 2">Công ty Dệt May XYZ</option>
+                <option value="Supplier 3">Công ty Vải Sợi DEF</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="monthSelect">Thời gian <span class="required">*</span></label>
+            <select id="monthSelect" onchange="renderOrders()">
+                <option value="all">Tất cả</option>
+                <option value="2025-04">Tháng 04/2025</option>
+                <option value="2025-05">Tháng 05/2025</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="staffer">Nhân viên thực hiện <span class="required">*</span></label>
+            <input type="text" id="staffer" placeholder="VD: Nguyễn Văn A">
+        </div>
+
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Đơn hàng</th>
+                    <th>Ngày đặt</th>
+                    <th>Tổng tiền (VNĐ)</th>
+                    <th>Trạng thái thanh toán</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="orderTable"></tbody>
+        </table>
+
+        <div class="total">Tổng tiền thanh toán: <span id="totalAmount">0</span> VNĐ</div>
+
+        <button class="btn" style="background-color: #38a169;" onclick="confirmPayment()">Xác nhận thanh toán</button>
+
+        <div style="padding-top: 1rem;">
+            Hệ thống lưu lại biên thanh toán hàng để xác minh sau này. Các trường bắt buộc có dấu <span class="required">*</span>.
+          </div>
+    </div>
+
+    <script>
+        // Dữ liệu đơn hàng (bao gồm ngày tháng)
+        const orders = [
+            { orderCode: "DH-20250408-001", date: "2025-04-08", totalAmount: 1500000, paymentStatus: "Chưa thanh toán", month: "2025-04" },
+            { orderCode: "DH-20250408-002", date: "2025-04-09", totalAmount: 2500000, paymentStatus: "Chưa thanh toán", month: "2025-04" },
+            { orderCode: "DH-20250508-001", date: "2025-05-08", totalAmount: 3000000, paymentStatus: "Chưa thanh toán", month: "2025-05" },
+            { orderCode: "DH-20250508-002", date: "2025-05-09", totalAmount: 2000000, paymentStatus: "Đã thanh toán", month: "2025-05" }
+        ];
+
+        // Hàm render danh sách đơn hàng
+        function renderOrders() {
+            const selectedMonth = document.getElementById("monthSelect").value;
+            const tbody = document.getElementById("orderTable");
+            tbody.innerHTML = ""; // Clear previous rows
+            let totalAmount = 0;
+
+            // Lọc đơn hàng theo tháng
+            const filteredOrders = selectedMonth === "all" ? orders : orders.filter(order => order.month === selectedMonth);
+
+            // Hiển thị đơn hàng
+            filteredOrders.forEach((order, index) => {
+                if (order.paymentStatus === "Chưa thanh toán") {
+                    totalAmount += order.totalAmount; // Chỉ cộng tiền cho đơn hàng chưa thanh toán
+                }
+
+                const row = document.createElement("tr");
+
+                row.innerHTML = `
+          <td>${order.orderCode}</td>
+          <td>${order.date}</td>
+          <td>${order.totalAmount.toLocaleString()}</td>
+          <td>
+            <select onchange="updatePaymentStatus(${index})">
+              <option value="Chưa thanh toán" ${order.paymentStatus === "Chưa thanh toán" ? 'selected' : ''}>Chưa thanh toán</option>
+              <option value="Đã thanh toán" ${order.paymentStatus === "Đã thanh toán" ? 'selected' : ''}>Đã thanh toán</option>
+            </select>
+          </td>
+          <td><button class="btn" onclick="viewOrder(${index})">Xem chi tiết đơn hàng</button></td>
+        `;
+                tbody.appendChild(row);
+            });
+
+            // Cập nhật tổng tiền thanh toán
+            document.getElementById("totalAmount").textContent = totalAmount.toLocaleString();
+        }
+
+        // Cập nhật trạng thái thanh toán của đơn hàng
+        function updatePaymentStatus(index) {
+            const select = document.querySelectorAll("#orderTable select")[index];
+            orders[index].paymentStatus = select.value;
+            renderOrders(); // Re-render lại bảng sau khi cập nhật
+        }
+
+        // Xem thông tin chi tiết đơn hàng
+        function viewOrder(index) {
+            alert("Thông tin chi tiết cho đơn hàng " + orders[index].orderCode);
+        }
+
+        // Xác nhận thanh toán
+        function confirmPayment() {
+            alert("Thanh toán đã được xác nhận!");
+        }
+
+        window.onload = renderOrders;
+    </script>
+</body>
+
+</html>

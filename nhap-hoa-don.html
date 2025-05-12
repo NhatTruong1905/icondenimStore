@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Nhập Hóa Đơn - Shop Thời Trang</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-image: url('https://res.cloudinary.com/dwc0l2bty/image/upload/v1744347430/snapedit_1744347405949_eluizm.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: #4a5568;
+      box-sizing: border-box;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+    }
+
+    h2 {
+      color: #5a3e36;
+      margin-bottom: 29px;
+      font-size: 29px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      position: relative;
+      display: inline-block;
+      padding-bottom: 10px;
+      text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1), 0 0 25px rgba(0, 0, 0, 0.1);
+    }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background-color: #a1866f;
+      border-radius: 2px;
+    }
+
+    label {
+      font-weight: 600;
+    }
+
+    input,
+    select,
+    textarea {
+      padding: 10px;
+      border: 1px solid #cbd5e0;
+      border-radius: 8px;
+      font-size: 15px;
+      background-color: #edf2f7;
+      width: 100%;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 12px;
+      border: 1px solid #e2e8f0;
+      text-align: center;
+    }
+
+    th {
+      background-color: #ebf8ff;
+      color: #2c5282;
+    }
+
+    .btn {
+      padding: 10px 18px;
+      background-color: #2b6cb0;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 10px;
+    }
+
+    .btn:hover {
+      background-color: #3182ce;
+    }
+
+    .total {
+      text-align: right;
+      margin-top: 20px;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .form-group>input {
+      margin-top: 0.5rem;
+    }
+
+    .filters {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+
+    select {
+      padding: 12px 20px;
+      border-radius: 10px;
+      border: 1px solid #cbd5e0;
+      background-color: #edf2f7;
+      font-size: 16px;
+      color: #4a5568;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    select:hover {
+      border-color: #3182ce;
+      background-color: #e2e8f0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>Nhập Hóa Đơn - Shop Thời Trang IconDenim</h2>
+
+    <!-- Thông tin khách hàng -->
+    <div class="form-group">
+      <label for="customerName">Tên khách hàng</label>
+      <input type="text" id="customerName" placeholder="Nhập tên khách hàng" required>
+    </div>
+
+    <div class="form-group">
+      <label for="orderDate">Ngày đặt hàng</label>
+      <input type="date" id="orderDate" required>
+    </div>
+
+    <div class="form-group">
+      <label for="employeeName">Nhân viên thực hiện</label>
+      <input type="text" id="employeeName" placeholder="Nhập tên nhân viên" required>
+    </div>
+
+    
+    <!-- Thêm sản phẩm -->
+    <div class="form-group">
+      <label for="productName">Tên sản phẩm</label>
+      <input type="text" id="productName" placeholder="Tên sản phẩm" required>
+    </div>
+
+    <div class="form-group">
+      <label for="productSize">Kích cỡ</label>
+      <select id="productSize" required>
+        <option value="S">S</option>
+        <option value="M">M</option>
+        <option value="L">L</option>
+        <option value="XL">XL</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="productPrice">Đơn giá</label>
+      <input type="number" id="productPrice" placeholder="Đơn giá" required>
+    </div>
+
+    <div class="form-group">
+      <label for="productQuantity">Số lượng</label>
+      <input type="number" id="productQuantity" placeholder="Số lượng" required>
+    </div>
+
+    <!-- Bảng sản phẩm -->
+    <table id="orderTable">
+        <thead>
+          <tr>
+            <th>Sản phẩm</th>
+            <th>Kích cỡ</th>
+            <th>Đơn giá</th>
+            <th>Số lượng</th>
+            <th>Thành tiền</th>
+          </tr>
+        </thead>
+        <tbody id="orderBody"></tbody>
+      </table>
+  
+
+    <button class="btn" onclick="addProduct()">Thêm sản phẩm</button>
+
+    <div class="total">
+      Tổng tiền: <span id="totalAmount">0</span> VND
+    </div>
+
+    <!-- Lưu và in hóa đơn -->
+    <button class="btn" style="background-color: #38a169;" onclick="saveInvoice()">Lưu hóa đơn</button>
+    <button class="btn" style="background-color: #e53e3e;" onclick="printInvoice()">In hóa đơn</button>
+  </div>
+
+  <script>
+    let totalAmount = 0;
+
+    // Hàm tính tổng tiền
+    function calculateTotalAmount() {
+      totalAmount = 0;
+      const rows = document.querySelectorAll('#orderBody tr');
+      rows.forEach(row => {
+        totalAmount += parseFloat(row.querySelector('.product-total').textContent) || 0;
+      });
+      document.getElementById('totalAmount').textContent = totalAmount;
+    }
+
+    // Thêm sản phẩm vào bảng
+    function addProduct() {
+      const productName = document.getElementById('productName').value;
+      const productSize = document.getElementById('productSize').value;
+      const productPrice = document.getElementById('productPrice').value;
+      const productQuantity = document.getElementById('productQuantity').value;
+
+      if (productName && productSize && productPrice && productQuantity) {
+        const row = document.createElement('tr');
+        const total = productPrice * productQuantity;
+
+        row.innerHTML = `
+          <td>${productName}</td>
+          <td>${productSize}</td>
+          <td>${productPrice} VND</td>
+          <td>${productQuantity}</td>
+          <td class="product-total">${total} VND</td>
+        `;
+
+        document.getElementById('orderBody').appendChild(row);
+        calculateTotalAmount();
+      } else {
+        alert('Vui lòng nhập đầy đủ thông tin sản phẩm');
+      }
+    }
+
+    // Lưu hóa đơn
+    function saveInvoice() {
+      alert("Hóa đơn đã được lưu.");
+      // Lưu hóa đơn vào hệ thống (có thể gửi yêu cầu AJAX ở đây)
+    }
+
+    // In hóa đơn
+    function printInvoice() {
+      const invoiceContent = `
+        <h2>Hóa Đơn Mua Hàng</h2>
+        <p><strong>Tên khách hàng:</strong> ${document.getElementById('customerName').value}</p>
+        <p><strong>Ngày đặt hàng:</strong> ${document.getElementById('orderDate').value}</p>
+        <p><strong>Nhân viên thực hiện:</strong> ${document.getElementById('employeeName').value}</p>
+        <table border="1" style="width:100%; margin-top:20px; border-collapse: collapse;">
+          <thead>
+            <tr>
+              <th>Sản phẩm</th>
+              <th>Kích cỡ</th>
+              <th>Đơn giá</th>
+              <th>Số lượng</th>
+              <th>Thành tiền</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${document.getElementById('orderBody').innerHTML}
+          </tbody>
+        </table>
+        <h3 style="text-align: right;">Tổng tiền: ${totalAmount} VND</h3>
+      `;
+
+      const printWindow = window.open('', '', 'height=500, width=800');
+      printWindow.document.write(invoiceContent);
+      printWindow.document.close();
+      printWindow.print();
+    }
+  </script>
+</body>
+
+</html>

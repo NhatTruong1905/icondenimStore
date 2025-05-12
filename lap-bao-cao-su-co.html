@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Kiểm Tra Sự Cố - Shop Thời Trang</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-image: url('https://res.cloudinary.com/dwc0l2bty/image/upload/v1744347430/snapedit_1744347405949_eluizm.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: #4a5568;
+      box-sizing: border-box;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+    }
+
+    h2 {
+      text-align: center;
+      color: #5a3e36;
+      margin-bottom: 30px;
+      font-size: 36px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      position: relative;
+      display: inline-block;
+      padding-bottom: 10px;
+      text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1), 0 0 25px rgba(0, 0, 0, 0.1);
+    }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background-color: #a1866f;
+      border-radius: 2px;
+    }
+
+    input,
+    select {
+      padding: 10px;
+      border: 1px solid #cbd5e0;
+      border-radius: 8px;
+      font-size: 15px;
+      background-color: #edf2f7;
+      width: 100%;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 12px;
+      border: 1px solid #e2e8f0;
+      text-align: center;
+    }
+
+    th {
+      background-color: #ebf8ff;
+      color: #2c5282;
+    }
+
+    .btn {
+      padding: 10px 18px;
+      background-color: #2b6cb0;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #3182ce;
+    }
+
+    .filters {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .btn-search {
+      background-color: #38a169;
+    }
+
+    .btn-search:hover {
+      background-color: #48bb78;
+    }
+
+    select:hover {
+      border-color: #3182ce;
+      background-color: #e2e8f0;
+    }
+
+    #detailSection {
+      margin-top: 40px;
+    }
+
+    #detailSection h3 {
+      text-align: center;
+      color: #2c5282;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-search {
+      padding: 8px 16px;
+      height: 40px;
+      background-color: #38a169;
+    }
+
+    .btn-search:hover {
+      background-color: #48bb78;
+    }
+
+    .btn-report {
+      padding: 8px 16px;
+      margin-top: 1rem;
+      font-size: 14px;
+      height: 40px;
+      background-color: #3182ce;
+    }
+
+    .btn-report:hover {
+      background-color: #2b6cb0;
+    }
+
+    #orderDetail {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    margin-top: 30px;
+    display: none;
+  }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>Kiểm Tra Sự Cố</h2>
+
+    <div class="form-group">
+      <label for="searchInput">Nhập mã đơn hàng:</label>
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="VD: DH001" />
+        <button class="btn btn-search" onclick="searchOrder()">Tìm</button>
+      </div>
+    </div>
+
+    <div id="orderDetail" class="order-info" style="display: none;">
+      <h3>Thông tin đơn hàng</h3>
+      <p><strong>Mã đơn hàng:</strong> <span id="orderId"></span></p>
+      <p><strong>Khách hàng:</strong> <span id="customer"></span></p>
+      <p><strong>Địa chỉ:</strong> <span id="address"></span></p>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Mã SP</th>
+          <th>Tên sản phẩm</th>
+          <th>Số lượng</th>
+          <th>Ngày mua</th>
+          <th>Ghi chú</th>
+          <th>Nguyên nhân sự cố</th>
+          <th>Hướng giải quyết</th>
+        </tr>
+      </thead>
+      <tbody id="productList">
+        <!-- Nội dung được cập nhật bằng JS -->
+      </tbody>
+    </table>
+
+    <button class="btn btn-report" onclick="generateReport()">Lập Báo Cáo</button>
+  </div>
+
+  <script>
+    const orders = {
+      DH001: {
+        customer: "Nguyễn Văn A",
+        address: "Hà Nội",
+        products: [
+          { id: "SP001", name: "Áo Thun Trơn", quantity: 2, date: "2025-04-10", note: "Hàng lỗi chỉ nhỏ", reason: "", resolution: "" },
+          { id: "SP002", name: "Quần Jean", quantity: 1, date: "2025-04-10", note: "Giao nhầm size", reason: "", resolution: "" },
+        ]
+      },
+      DH002: {
+        customer: "Lê Thị B",
+        address: "Hải Phòng",
+        products: [
+          { id: "SP003", name: "Đầm Dạ Hội", quantity: 1, date: "2025-04-12", note: "Không đúng màu", reason: "", resolution: "" },
+          { id: "SP004", name: "Áo Khoác Dạ", quantity: 2, date: "2025-04-12", note: "Giao chậm", reason: "", resolution: "" }
+        ]
+      },
+      DH003: {
+        customer: "Trần Văn C",
+        address: "Đà Nẵng",
+        products: [
+          { id: "SP005", name: "Áo Sơ Mi", quantity: 3, date: "2025-04-14", note: "", reason: "", resolution: "" },
+          { id: "SP006", name: "Giày Sneaker", quantity: 1, date: "2025-04-14", note: "Thiếu phụ kiện", reason: "", resolution: "" }
+        ]
+      }
+    };
+
+    function renderProducts(products) {
+      const tbody = document.getElementById("productList");
+      tbody.innerHTML = "";
+      products.forEach((p, index) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = ` 
+          <td>${p.id}</td>
+          <td>${p.name}</td>
+          <td>${p.quantity}</td>
+          <td>${p.date}</td>
+          <td>${p.note}</td>
+          <td class="details-cell"><input type="text" id="reason-${index}" value="${p.reason}" placeholder="Nguyên nhân" /></td>
+          <td class="details-cell"><input type="text" id="resolution-${index}" value="${p.resolution}" placeholder="Giải quyết" /></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function searchOrder() {
+      const code = document.getElementById("searchInput").value.trim().toUpperCase();
+      const infoBox = document.getElementById("orderDetail");
+
+      if (orders[code]) {
+        document.getElementById("orderId").textContent = code;
+        document.getElementById("customer").textContent = orders[code].customer;
+        document.getElementById("address").textContent = orders[code].address;
+        infoBox.style.display = "block";
+        renderProducts(orders[code].products);
+      } else {
+        infoBox.style.display = "none";
+        renderProducts([]);
+      }
+    }
+
+    function generateReport() {
+      const orderId = document.getElementById("orderId").textContent;
+      const customer = document.getElementById("customer").textContent;
+      const address = document.getElementById("address").textContent;
+      let productDetails = '';
+
+      orders[orderId]?.products.forEach((product, index) => {
+        const reason = document.getElementById(`reason-${index}`).value;
+        const resolution = document.getElementById(`resolution-${index}`).value;
+
+        productDetails += ` 
+          <tr>
+            <td>${product.id}</td>
+            <td>${product.name}</td>
+            <td>${product.quantity}</td>
+            <td>${product.date}</td>
+            <td>${product.note}</td>
+            <td>${reason}</td>
+            <td>${resolution}</td>
+          </tr>
+        `;
+      });
+
+      const content = `
+        <h2>BÁO CÁO SỰ CỐ</h2>
+        <p><strong>Mã đơn hàng:</strong> ${orderId}</p>
+        <p><strong>Khách hàng:</strong> ${customer}</p>
+        <p><strong>Địa chỉ:</strong> ${address}</p>
+        <table border="1" style="width:100%; border-collapse: collapse; margin-top:20px;">
+          <thead>
+            <tr>
+              <th>Mã SP</th>
+              <th>Tên sản phẩm</th>
+              <th>Số lượng</th>
+              <th>Ngày mua</th>
+              <th>Ghi chú</th>
+              <th>Nguyên nhân sự cố</th>
+              <th>Hướng giải quyết</th>
+            </tr>
+          </thead>
+          <tbody>${productDetails}</tbody>
+        </table>
+      `;
+
+      const win = window.open('', '', 'width=800,height=600');
+      win.document.write(content);
+      win.document.close();
+      win.print();
+    }
+
+  </script>
+</body>
+
+</html>

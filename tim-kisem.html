@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Thống Kê Sự Cố</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f7fafc;
+      color: #2d3748;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 28px;
+      color: #2c5282;
+      margin-bottom: 30px;
+    }
+
+    .filters {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .form-group {
+      flex: 1;
+      min-width: 120px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e0;
+      background-color: #edf2f7;
+      font-size: 15px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #2b6cb0;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: 0.3s;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #3182ce;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 30px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 12px;
+      border: 1px solid #e2e8f0;
+      text-align: center;
+    }
+
+    th {
+      background-color: #ebf8ff;
+      color: #2c5282;
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-image: url('https://res.cloudinary.com/dwc0l2bty/image/upload/v1744347430/snapedit_1744347405949_eluizm.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: #4a5568;
+      box-sizing: border-box;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+    }
+
+    h2 {
+      text-align: center;
+      color: #5a3e36;
+      margin-bottom: 30px;
+      font-size: 36px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      position: relative;
+      display: inline-block;
+      padding-bottom: 10px;
+      text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1), 0 0 25px rgba(0, 0, 0, 0.1);
+    }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background-color: #a1866f;
+      border-radius: 2px;
+    }
+
+    input,
+    select {
+      padding: 10px;
+      border: 1px solid #cbd5e0;
+      border-radius: 8px;
+      font-size: 15px;
+      background-color: #edf2f7;
+      width: 100%;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 12px;
+      border: 1px solid #e2e8f0;
+      text-align: center;
+    }
+
+    th {
+      background-color: #ebf8ff;
+      color: #2c5282;
+    }
+
+    .btn {
+      padding: 10px 18px;
+      background-color: #2b6cb0;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #3182ce;
+    }
+
+    .filters {
+      display: flex;
+      gap: 20px;
+    }
+
+    .btn-search {
+      background-color: #38a169;
+    }
+
+    .btn-search:hover {
+      background-color: #48bb78;
+    }
+
+    select:hover {
+      border-color: #3182ce;
+      background-color: #e2e8f0;
+    }
+
+    #detailSection {
+      margin-top: 40px;
+    }
+
+    #detailSection h3 {
+      text-align: center;
+      color: #2c5282;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-search {
+      padding: 8px 16px;
+      height: 40px;
+      background-color: #38a169;
+    }
+
+    .btn-search:hover {
+      background-color: #48bb78;
+    }
+
+    .btn-report {
+      padding: 8px 16px;
+      margin-top: 1rem;
+      font-size: 14px;
+      height: 40px;
+      background-color: #3182ce;
+    }
+
+    .btn-report:hover {
+      background-color: #2b6cb0;
+    }
+
+    #orderDetail {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      margin-top: 30px;
+      display: none;
+    }
+
+    #incidentLog {
+      margin-top: 40px;
+      border-top: 2px solid #e2e8f0;
+      padding-top: 20px;
+      display: none;
+    }
+
+    .incident-section {
+      margin-top: 40px;
+    }
+
+    .btn-show-incident {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #ed8936;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .btn-show-incident:hover {
+      background-color: #fbd38d;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>Thống Kê Sự Cố</h2>
+
+    <div class="filters">
+      <div class="form-group">
+        <label for="day">Ngày</label>
+        <select id="day">
+          <option value="">--</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="month">Tháng</label>
+        <select id="month">
+          <option value="">--</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="year">Năm</label>
+        <select id="year">
+          <option value="">--</option>
+        </select>
+      </div>
+    </div>
+
+    <button onclick="filterIncidents()">Thống Kê</button>
+
+    <table id="incidentTable">
+      <thead>
+        <tr>
+          <th>STT</th>
+          <th>Mã Sự Cố</th>
+          <th>Ngày</th>
+          <th>Nội dung</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Kết quả sự cố hiển thị tại đây -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    // Mẫu dữ liệu sự cố
+    const incidentData = [
+      { id: "SC001", date: "2025-04-10", detail: "Lỗi giao nhầm sản phẩm" },
+      { id: "SC002", date: "2025-04-10", detail: "Sản phẩm bị lỗi đường may" },
+      { id: "SC003", date: "2025-04-11", detail: "Khách hàng trả hàng do không đúng mô tả" },
+      { id: "SC004", date: "2025-03-12", detail: "Lỗi vận chuyển trễ" },
+      { id: "SC005", date: "2024-04-10", detail: "Sai địa chỉ giao hàng" }
+    ];
+
+    // Thêm options cho ngày/tháng/năm
+    function populateDropdowns() {
+      const day = document.getElementById("day");
+      const month = document.getElementById("month");
+      const year = document.getElementById("year");
+
+      for (let i = 1; i <= 31; i++) {
+        let opt = document.createElement("option");
+        opt.value = i;
+        opt.textContent = i;
+        day.appendChild(opt);
+      }
+
+      for (let i = 1; i <= 12; i++) {
+        let opt = document.createElement("option");
+        opt.value = i;
+        opt.textContent = i;
+        month.appendChild(opt);
+      }
+
+      const currentYear = new Date().getFullYear();
+      for (let i = currentYear; i >= currentYear - 5; i--) {
+        let opt = document.createElement("option");
+        opt.value = i;
+        opt.textContent = i;
+        year.appendChild(opt);
+      }
+    }
+
+    // Lọc dữ liệu theo ngày/tháng/năm
+    function filterIncidents() {
+      const day = document.getElementById("day").value;
+      const month = document.getElementById("month").value;
+      const year = document.getElementById("year").value;
+
+      const filtered = incidentData.filter(item => {
+        const [y, m, d] = item.date.split("-");
+        return (!day || d == day.padStart(2, "0")) &&
+               (!month || m == month.padStart(2, "0")) &&
+               (!year || y == year);
+      });
+
+      displayTable(filtered);
+    }
+
+    // Hiển thị kết quả
+    function displayTable(data) {
+      const tbody = document.querySelector("#incidentTable tbody");
+      tbody.innerHTML = "";
+      if (data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4">Không có dữ liệu</td></tr>`;
+        return;
+      }
+
+      data.forEach((item, index) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${item.id}</td>
+          <td>${item.date}</td>
+          <td>${item.detail}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    populateDropdowns(); // Khởi tạo options khi load trang
+  </script>
+</body>
+
+</html>

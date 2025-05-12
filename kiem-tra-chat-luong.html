@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Kiểm Tra Hàng - Shop Thời Trang</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-image: url('https://res.cloudinary.com/dwc0l2bty/image/upload/v1744347430/snapedit_1744347405949_eluizm.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: #4a5568;
+      box-sizing: border-box;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+    }
+
+    h2 {
+      text-align: center;
+      color: #5a3e36;
+      margin-bottom: 30px;
+      font-size: 33px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      position: relative;
+      display: inline-block;
+      padding-bottom: 10px;
+      text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1), 0 0 25px rgba(0, 0, 0, 0.1);
+    }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background-color: #a1866f;
+      border-radius: 2px;
+    }
+
+    label {
+      font-weight: 600;
+    }
+
+    input,
+    select,
+    textarea {
+      padding: 10px;
+      border: 1px solid #cbd5e0;
+      border-radius: 8px;
+      font-size: 15px;
+      background-color: #edf2f7;
+      width: 100%;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 12px;
+      border: 1px solid #e2e8f0;
+      text-align: center;
+    }
+
+    th {
+      background-color: #ebf8ff;
+      color: #2c5282;
+    }
+
+    .btn {
+      padding: 10px 18px;
+      background-color: #2b6cb0;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 10px;
+    }
+
+    .btn:hover {
+      background-color: #3182ce;
+    }
+
+    .total {
+      text-align: right;
+      margin-top: 20px;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .form-group>input {
+      margin-top: 0.5rem;
+    }
+
+    textarea {
+      height: 100px;
+    }
+
+    .filters {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+
+    select {
+      padding: 12px 20px;
+      border-radius: 10px;
+      border: 1px solid #cbd5e0;
+      background-color: #edf2f7;
+      font-size: 16px;
+      color: #4a5568;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    select:hover {
+      border-color: #3182ce;
+      background-color: #e2e8f0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>Kiểm Tra Chất Lượng Hàng - Shop Thời Trang IconDenim</h2>
+
+    <div class="filters">
+      <select id="typeFilter">
+        <option value="all">Tất cả loại</option>
+        <option value="áo">Áo</option>
+        <option value="quần">Quần</option>
+        <option value="phụ kiện">Phụ kiện</option>
+      </select>
+
+      <select id="sizeFilter">
+        <option value="all">Tất cả kích cỡ</option>
+        <option value="S">S</option>
+        <option value="M">M</option>
+        <option value="L">L</option>
+        <option value="XL">XL</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="product">Tên sản phẩm <span class="required">*</span></label>
+      <input type="text" id="product" placeholder="Nhập tên sản phẩm" required>
+    </div>
+
+    <div class="form-group">
+      <label for="quantity">Số lượng kiểm tra <span class="required">*</span></label>
+      <input type="number" id="quantity" value="1" min="1" required>
+    </div>
+
+    <div class="form-group">
+      <label for="quantityPassed">Số lượng đạt <span class="required">*</span></label>
+      <input type="number" id="quantityPassed" value="0" min="0" required>
+    </div>
+
+    <div class="form-group">
+      <label for="note">Ghi chú lỗi</label>
+      <textarea id="note" placeholder="Ghi chú lỗi nếu có..."></textarea>
+    </div>
+
+    <table id="inspectionTable">
+      <thead>
+        <tr>
+          <th>Sản phẩm</th>
+          <th>Kích cỡ</th>
+          <th>Số lượng kiểm tra</th>
+          <th>Số lượng đạt</th>
+          <th>Ghi chú lỗi</th>
+        </tr>
+      </thead>
+      <tbody id="inspectionBody"></tbody>
+    </table>
+
+    <button class="btn" onclick="addInspection()">Thêm sản phẩm đã kiểm tra</button>
+
+    <div class="total">
+      Tổng số sản phẩm đã kiểm tra: <span id="totalProducts">0</span> sản phẩm
+    </div>
+
+    <button class="btn" style="background-color: #38a169;" onclick="saveInspection()">Lưu danh sách đã  kiểm tra</button>
+  </div>
+
+  <script>
+    function addInspection() {
+      const product = document.getElementById("product").value;
+      const quantity = document.getElementById("quantity").value;
+      const quantityPassed = document.getElementById("quantityPassed").value;
+      const note = document.getElementById("note").value;
+
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${product}</td>
+        <td>${document.getElementById("sizeFilter").value}</td>
+        <td>${quantity}</td>
+        <td>${quantityPassed}</td>
+        <td>${note}</td>
+      `;
+      document.getElementById("inspectionBody").appendChild(row);
+      calculateTotalProducts();
+    }
+
+    function calculateTotalProducts() {
+      const rows = document.querySelectorAll("#inspectionBody tr");
+      let total = 0;
+      rows.forEach(row => {
+        total += parseInt(row.children[2].textContent) || 0;
+      });
+      document.getElementById("totalProducts").textContent = total;
+    }
+
+    function saveInspection() {
+      alert("Kết quả kiểm tra đã được lưu.");
+      // Lưu kết quả kiểm tra vào hệ thống (có thể gửi yêu cầu AJAX ở đây)
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Quản Lý Giao Hàng - Shop Thời Trang</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-image: url('https://res.cloudinary.com/dwc0l2bty/image/upload/v1744347430/snapedit_1744347405949_eluizm.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: #4a5568;
+      box-sizing: border-box;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+    }
+
+    h2 {
+      color: #5a3e36;
+      margin-bottom: 30px;
+      font-size: 30px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      position: relative;
+      display: inline-block;
+      padding-bottom: 10px;
+      text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1), 0 0 25px rgba(0, 0, 0, 0.1);
+    }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background-color: #a1866f;
+      border-radius: 2px;
+    }
+
+    input,
+    select {
+      padding: 10px;
+      border: 1px solid #cbd5e0;
+      border-radius: 8px;
+      font-size: 15px;
+      background-color: #edf2f7;
+      width: 100%;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 12px;
+      border: 1px solid #e2e8f0;
+      text-align: center;
+    }
+
+    th {
+      background-color: #ebf8ff;
+      color: #2c5282;
+    }
+
+    .btn {
+      padding: 10px 18px;
+      background-color: #2b6cb0;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #3182ce;
+    }
+
+    .filters {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .btn-search {
+      background-color: #38a169;
+    }
+
+    .btn-search:hover {
+      background-color: #48bb78;
+    }
+
+    select:hover {
+      border-color: #3182ce;
+      background-color: #e2e8f0;
+    }
+
+    #detailSection {
+      margin-top: 40px;
+    }
+
+    #detailSection h3 {
+      text-align: center;
+      color: #2c5282;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>Quản Lý Giao Hàng - Shop Thời Trang IconDenim</h2>
+
+    <div class="filters">
+      <div style="flex: 1;">
+        <label for="orderSearch">Tìm mã đơn hàng</label>
+        <div style="display: flex; gap: 10px;">
+          <input type="text" id="orderSearch" placeholder="Nhập mã đơn hàng">
+          <button class="btn btn-search" onclick="searchOrder()">Tìm kiếm đơn hàng</button>
+        </div>
+      </div>
+
+      <div style="flex: 1;">
+        <label for="statusFilter">Lọc trạng thái</label>
+        <select id="statusFilter" onchange="filterStatus()">
+          <option value="all">Tất cả</option>
+          <option value="pending">Chưa giao</option>
+          <option value="shipping">Đang giao</option>
+          <option value="delivered">Đã giao</option>
+        </select>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Mã ĐH</th>
+          <th>Khách hàng</th>
+          <th>Địa chỉ</th>
+          <th>Ngày dự kiến</th>
+          <th>Trạng thái</th>
+          <th>Cập nhật trạng thái (Nếu có)</th>
+        </tr>
+      </thead>
+      <tbody id="orderTableBody"></tbody>
+    </table>
+
+    <div id="detailSection"></div>
+  </div>
+
+  <script>
+    const orders = [
+      {
+        id: "DH001",
+        customer: "Nguyễn Văn A",
+        address: "Hà Nội",
+        date: "2025-04-15",
+        status: "pending",
+        products: [
+          { name: "Áo thun", size: "M", quantity: 2, price: 150000 },
+          { name: "Quần jeans", size: "L", quantity: 1, price: 300000 }
+        ]
+      },
+      {
+        id: "DH002",
+        customer: "Lê Thị B",
+        address: "Hải Phòng",
+        date: "2025-04-12",
+        status: "delivered",
+        products: [
+          { name: "Đầm công sở", size: "S", quantity: 1, price: 400000 }
+        ]
+      },
+      {
+        id: "DH003",
+        customer: "Trần Văn C",
+        address: "Đà Nẵng",
+        date: "2025-04-17",
+        status: "shipping",
+        products: [
+          { name: "Áo khoác", size: "XL", quantity: 2, price: 500000 }
+        ]
+      }
+    ];
+
+    function translateStatus(status) {
+      if (status === 'pending') return 'Chưa giao';
+      if (status === 'shipping') return 'Đang giao';
+      if (status === 'delivered') return 'Đã giao';
+      return '';
+    }
+
+    function renderOrders(data) {
+      const tbody = document.getElementById('orderTableBody');
+      tbody.innerHTML = '';
+      data.forEach(order => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${order.id}</td>
+          <td>${order.customer}</td>
+          <td>${order.address}</td>
+          <td>${order.date}</td>
+          <td>${translateStatus(order.status)}</td>
+          <td>
+            <select onchange="updateStatus('${order.id}', this.value)">
+              <option value="">-- Cập nhật --</option>
+              <option value="pending">Chưa giao</option>
+              <option value="shipping">Đang giao</option>
+              <option value="delivered">Đã giao</option>
+            </select>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function searchOrder() {
+      const keyword = document.getElementById('orderSearch').value.trim().toUpperCase();
+      const result = orders.find(o => o.id === keyword);
+      if (result) {
+        renderOrders([result]);
+        renderProductDetails(result);
+      } else {
+        renderOrders([]);
+        document.getElementById('detailSection').innerHTML = "<p style='text-align:center;'>Không tìm thấy đơn hàng.</p>";
+      }
+    }
+
+    function renderProductDetails(order) {
+      let html = `
+        <div id="productDetails">
+          <h3>Chi tiết sản phẩm đơn hàng ${order.id}</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Tên sản phẩm</th>
+                <th>Kích cỡ</th>
+                <th>Số lượng</th>
+                <th>Đơn giá</th>
+                <th>Thành tiền</th>
+              </tr>
+            </thead>
+            <tbody>
+      `;
+      order.products.forEach(p => {
+        html += `
+          <tr>
+            <td>${p.name}</td>
+            <td>${p.size}</td>
+            <td>${p.quantity}</td>
+            <td>${p.price.toLocaleString()}đ</td>
+            <td>${(p.quantity * p.price).toLocaleString()}đ</td>
+          </tr>
+        `;
+      });
+      html += "</tbody></table></div>";
+      document.getElementById('detailSection').innerHTML = html;
+    }
+
+    function filterStatus() {
+      const filter = document.getElementById('statusFilter').value;
+      const filtered = filter === 'all' ? orders : orders.filter(o => o.status === filter);
+      renderOrders(filtered);
+      document.getElementById('detailSection').innerHTML = ''; // Xoá chi tiết nếu lọc trạng thái
+    }
+
+    function updateStatus(id, newStatus) {
+      const order = orders.find(o => o.id === id);
+      if (order && newStatus) {
+        order.status = newStatus;
+        renderOrders([order]);
+        renderProductDetails(order);
+      }
+    }
+
+    renderOrders(orders);
+  </script>
+</body>
+
+</html>

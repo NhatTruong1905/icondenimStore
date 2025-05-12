@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Nhập Hàng - Cập Nhật Danh Mục Hàng Hóa</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-image: url('https://res.cloudinary.com/dwc0l2bty/image/upload/v1744347430/snapedit_1744347405949_eluizm.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: #4a5568;
+      box-sizing: border-box;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+    }
+
+    h2 {
+      color: #5a3e36;
+      margin-bottom: 30px;
+      font-size: 33px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      position: relative;
+      display: inline-block;
+      padding-bottom: 10px;
+      text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1), 0 0 25px rgba(0, 0, 0, 0.1);
+    }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background-color: #a1866f;
+      border-radius: 2px;
+    }
+  
+    label {
+      font-weight: 600;
+    }
+  
+    input,
+    select,
+    textarea {
+      padding: 12px;
+      border: 1px solid #cbd5e0;
+      border-radius: 8px;
+      font-size: 15px;
+      background-color: #edf2f7;
+      width: 100%;
+      transition: all 0.3s ease;
+    }
+  
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #38a169;
+      background-color: #fff;
+      box-shadow: 0 0 5px rgba(56, 161, 105, 0.5);
+      outline: none;
+    }
+  
+    .form-group {
+      margin-bottom: 20px;
+    }
+  
+    .btn {
+      padding: 10px 18px;
+      background-color: #4299e1;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 10px;
+    }
+  
+    .btn:hover {
+      background-color: #3182ce;
+    }
+  
+    .table-container {
+      margin-top: 30px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+  
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+  
+    th,
+    td {
+      padding: 12px;
+      border: 1px solid #e2e8f0;
+      text-align: center;
+    }
+  
+    th {
+      background-color: #ebf8ff;
+      color: #2c5282;
+    }
+  
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 14px;
+      color: #2d3748;
+    }
+  
+    textarea:focus {
+      border-color: #3182ce;
+      box-shadow: 0 0 5px rgba(56, 161, 105, 0.5);
+    }
+  
+    .table-container {
+      margin-top: 30px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      padding: 20px;
+    }
+
+    .required {
+      color: red;
+    }
+
+    .form-group > input, select, textarea {
+      margin-top: 0.5rem;
+      margin-right: 2rem;
+    }
+
+    .form-group > select {
+      width: 103%;
+    }
+  </style>
+  
+</head>
+
+<body>
+  <div class="container">
+    <h2>Nhập Hàng - Shop Thời Trang IconDenim</h2>
+
+    <form id="productForm">
+      <div class="form-group">
+        <label for="productName">Tên Sản Phẩm <span class="required">*</span></label>
+        <input type="text" id="productName" placeholder="Nhập tên sản phẩm" required />
+      </div>
+
+      <div class="form-group">
+        <label for="productCode">Mã Sản Phẩm <span class="required">*</span></label>
+        <input type="text" id="productCode" placeholder="Nhập mã sản phẩm" required />
+      </div>
+
+      <div class="form-group">
+        <label for="productPrice">Giá (VNĐ) <span class="required">*</span></label>
+        <input type="number" id="productPrice" placeholder="Nhập giá sản phẩm" required />
+      </div>
+
+      <div class="form-group">
+        <label for="productQuantity">Số Lượng <span class="required">*</span></label>
+        <input type="number" id="productQuantity" placeholder="Nhập số lượng sản phẩm" required />
+      </div>
+
+      <div class="form-group">
+        <label for="productCategory">Loại Sản Phẩm <span class="required">*</span></label>
+        <select id="productCategory" required>
+          <option value="">Chọn loại sản phẩm</option>
+          <option value="Vải">Vải</option>
+          <option value="Áo">Áo</option>
+          <option value="Quần">Quần</option>
+          <option value="Phụ Kiện">Phụ Kiện</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="productSupplier">Nhà Cung Cấp <span class="required">*</span></label>
+        <select id="productSupplier" required>
+          <option value="">Chọn nhà cung cấp</option>
+          <option value="Công ty Vải May">Công ty Vải May</option>
+          <option value="Công ty Dệt May XYZ">Công ty Dệt May XYZ</option>
+          <option value="Công ty Vải Sợi DEF">Công ty Vải Sợi DEF</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="productDescription">Mô Tả Sản Phẩm</label>
+        <textarea id="productDescription" rows="4" placeholder="Nhập mô tả sản phẩm" required></textarea>
+      </div>
+
+      <button class="btn" style="background-color: #38a169;" type="submit">Thêm Sản Phẩm Đã Nhập Hàng</button>
+    </form>
+
+    <div style="padding-top: 1rem;">
+        Hệ thống lưu lại thông tin sản phẩm để xác minh sau này. Các trường bắt buộc có dấu <span class="required">*</span>.
+      </div>
+
+    <div class="table-container">
+      <h3>Danh Mục Sản Phẩm Đã Nhập</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Mã Sản Phẩm</th>
+            <th>Tên Sản Phẩm</th>
+            <th>Giá (VNĐ)</th>
+            <th>Số Lượng</th>
+            <th>Loại</th>
+            <th>Nhà Cung Cấp</th>
+            <th>Mô Tả</th>
+          </tr>
+        </thead>
+        <tbody id="productTable"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const productForm = document.getElementById('productForm');
+    const productTable = document.getElementById('productTable');
+    let products = [];
+
+    // Hàm thêm sản phẩm vào danh sách
+    productForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const productName = document.getElementById('productName').value;
+      const productCode = document.getElementById('productCode').value;
+      const productPrice = parseFloat(document.getElementById('productPrice').value);
+      const productQuantity = parseInt(document.getElementById('productQuantity').value);
+      const productCategory = document.getElementById('productCategory').value;
+      const productSupplier = document.getElementById('productSupplier').value;
+      const productDescription = document.getElementById('productDescription').value;
+
+      // Kiểm tra nếu thông tin nhập vào hợp lệ
+      if (!productName || !productCode || !productPrice || !productQuantity || !productCategory || !productSupplier || !productDescription) {
+        alert('Vui lòng điền đầy đủ thông tin.');
+        return;
+      }
+
+      const newProduct = {
+        productName,
+        productCode,
+        productPrice,
+        productQuantity,
+        productCategory,
+        productSupplier,
+        productDescription
+      };
+
+      // Thêm sản phẩm vào mảng sản phẩm
+      products.push(newProduct);
+      renderProductTable();
+      productForm.reset();  // Reset form sau khi thêm
+    });
+
+    // Hàm render bảng sản phẩm
+    function renderProductTable() {
+      productTable.innerHTML = '';
+      products.forEach(product => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${product.productCode}</td>
+          <td>${product.productName}</td>
+          <td>${product.productPrice.toLocaleString()}</td>
+          <td>${product.productQuantity}</td>
+          <td>${product.productCategory}</td>
+          <td>${product.productSupplier}</td>
+          <td>${product.productDescription}</td>
+        `;
+        productTable.appendChild(row);
+      });
+    }
+  </script>
+</body>
+
+</html>

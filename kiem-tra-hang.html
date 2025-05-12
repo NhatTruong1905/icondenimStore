@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Kiểm Tra Hàng - Shop Thời Trang</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-image: url('https://res.cloudinary.com/dwc0l2bty/image/upload/v1744347430/snapedit_1744347405949_eluizm.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: #4a5568;
+      box-sizing: border-box;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+    }
+
+    h2 {
+      text-align: center;
+      color: #5a3e36;
+      margin-bottom: 30px;
+      font-size: 36px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      position: relative;
+      display: inline-block;
+      padding-bottom: 10px;
+      text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1), 0 0 25px rgba(0, 0, 0, 0.1);
+    }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background-color: #a1866f;
+      border-radius: 2px;
+    }
+
+    input,
+    select {
+      padding: 10px;
+      border: 1px solid #cbd5e0;
+      border-radius: 8px;
+      font-size: 15px;
+      background-color: #edf2f7;
+      width: 100%;
+    }
+    label {
+      font-weight: 600;
+    }
+
+    input,
+    select,
+    textarea {
+      padding: 10px;
+      border: 1px solid #cbd5e0;
+      border-radius: 8px;
+      font-size: 15px;
+      background-color: #edf2f7;
+      width: 100%;
+    }
+
+    textarea {
+      height: 80px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 12px;
+      border: 1px solid #e2e8f0;
+      text-align: center;
+    }
+
+    th {
+      background-color: #ebf8ff;
+      color: #2c5282;
+    }
+
+    .btn {
+      padding: 10px 18px;
+      background-color: #4299e1;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 10px;
+    }
+
+    .btn:hover {
+      background-color: #3182ce;
+    }
+
+    .total {
+      text-align: right;
+      margin-top: 20px;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .required {
+      color: red;
+    }
+
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+
+      #printArea,
+      #printArea * {
+        visibility: visible;
+      }
+
+      #printArea {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+      }
+
+      .btn {
+        display: none !important;
+      }
+    }
+
+
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>Kiểm Tra Hàng Nhập - Shop Thời Trang IconDenim </h2>
+
+    <div class="form-group">
+      <label for="orderCode">Mã đơn hàng <span class="required">*</span></label>
+      <input type="text" id="orderCode" placeholder="VD: DH-20250408-123">
+    </div>
+
+    <div class="form-group">
+      <label for="supplier">Nhà cung cấp <span class="required">*</span></label>
+      <input type="text" id="supplier" placeholder="VD: Công ty Vải May">
+    </div>
+
+    <div class="form-group">
+      <label for="receivedDate">Ngày nhận thực tế <span class="required">*</span></label>
+      <input type="date" id="receivedDate">
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Sản phẩm</th>
+          <th>Số lượng đặt</th>
+          <th>Số lượng thực nhận</th>
+          <th>Chênh lệch</th>
+          <th>Ghi chú</th>
+        </tr>
+      </thead>
+      <tbody id="productTable"></tbody>
+    </table>
+
+    <div class="total">Tổng số sản phẩm đã kiểm: <span id="totalChecked">0</span></div>
+
+    <button class="btn" style="background-color: #38a169;" onclick="window.print()"> Xác nhận đơn hàng đã kiểm tra</button>
+
+    <div style="padding-top: 1rem;">
+      Hệ thống lưu lại kết quả kiểm hàng để xác minh sau này. Các trường bắt buộc có dấu <span class="required">*</span>.
+    </div>
+  </div>
+  
+
+  <div id="printArea" style="display: none; padding: 40px;">
+    <h3 style="text-align: center;">BIÊN BẢN KIỂM TRA HÀNG</h3>
+    <p><strong>Mã đơn hàng:</strong> <span id="printOrderCode"></span></p>
+    <p><strong>Nhà cung cấp:</strong> <span id="printSupplier"></span></p>
+    <p><strong>Ngày nhận:</strong> <span id="printReceivedDate"></span></p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Sản phẩm</th>
+          <th>SL đặt</th>
+          <th>SL nhận</th>
+          <th>Tình trạng</th>
+          <th>Ghi chú</th>
+        </tr>
+      </thead>
+      <tbody id="printCheckBody"></tbody>
+    </table>
+
+    <div style="margin-top: 20px;"><strong>Ghi chú:</strong> <span id="printNote"></span></div>
+  </div>
+
+  <script>
+    const data = [
+      { name: "Áo sơ mi trắng", ordered: 10, received: 9, note: "Thiếu 1 cái do rách" },
+      { name: "Quần jeans đen", ordered: 5, received: 5, note: "Đủ hàng" },
+      { name: "Áo khoác bomber", ordered: 2, received: 3, note: "Thừa 1 cái do nhầm lô" }
+    ];
+
+    function renderTable() {
+      const tbody = document.getElementById("productTable");
+      tbody.innerHTML = ""; // Clear old rows if any
+      data.forEach((item, index) => {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+        <td>${item.name}</td>
+        <td>${item.ordered}</td>
+        <td><input type="number" value="${item.received}" min="0" onchange="updateDifference(${index})" style="width: 70px;"></td>
+        <td id="diff-${index}">${item.received - item.ordered}</td>
+        <td><input type="text" value="${item.note}" onchange="updateNote(${index})" style="width: 100%;"></td>
+      `;
+
+        tbody.appendChild(row);
+      });
+
+      updateTotalChecked();
+    }
+
+    function updateDifference(index) {
+      const input = document.querySelectorAll("#productTable input[type='number']")[index];
+      const newReceived = parseInt(input.value) || 0;
+      data[index].received = newReceived;
+      const diff = newReceived - data[index].ordered;
+      document.getElementById(`diff-${index}`).textContent = diff >= 0 ? `+${diff}` : diff;
+      updateTotalChecked();
+    }
+
+    function updateNote(index) {
+      const input = document.querySelectorAll("#productTable input[type='text']")[index];
+      data[index].note = input.value;
+    }
+
+    function updateTotalChecked() {
+      const total = data.reduce((sum, item) => sum + item.received, 0);
+      document.getElementById("totalChecked").textContent = total;
+    }
+
+    window.onload = renderTable;
+  </script>
+
+</body>
+
+</html>

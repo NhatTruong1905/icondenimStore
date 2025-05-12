@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Đặt Hàng - Shop Thời Trang</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-image: url('https://res.cloudinary.com/dwc0l2bty/image/upload/v1744347430/snapedit_1744347405949_eluizm.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: #4a5568;
+      box-sizing: border-box;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+    }
+
+    h2 {
+      text-align: center;
+      color: #5a3e36;
+      margin-bottom: 30px;
+      font-size: 36px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      position: relative;
+      display: inline-block;
+      padding-bottom: 10px;
+      text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1), 0 0 25px rgba(0, 0, 0, 0.1);
+    }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background-color: #a1866f;
+      border-radius: 2px;
+    }
+
+    input,
+    select {
+      padding: 10px;
+      border: 1px solid #cbd5e0;
+      border-radius: 8px;
+      font-size: 15px;
+      background-color: #edf2f7;
+      width: 100%;
+    }
+
+    label {
+      font-weight: 600;
+    }
+
+    input {
+      padding: 10px;
+      border: 1px solid #cbd5e0;
+      border-radius: 8px;
+      font-size: 15px;
+      background-color: #edf2f7;
+      width: 100%;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #e2e8f0;
+      text-align: center;
+    }
+
+    th {
+      background-color: #ebf8ff;
+      color: #2c5282;
+    }
+
+    .btn {
+      padding: 10px 18px;
+      background-color: #4299e1;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 10px;
+    }
+
+    .btn:hover {
+      background-color: #3182ce;
+    }
+
+    .total {
+      text-align: right;
+      margin-top: 20px;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .required {
+      color: red;
+    }
+
+    .form-group > input {
+      margin-top: 0.5rem;
+    }
+
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+
+      #printSection, #printSection * {
+        visibility: visible;
+      }
+
+      #printSection {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+      }
+
+      .btn, #inputTable {
+        display: none !important;
+      }
+    }
+
+    /* Thiết kế phần in */
+    #printSection {
+      padding: 40px;
+      background-color: #fff;
+    }
+
+    #printSection h3 {
+      text-align: center;
+      color: #2b6cb0;
+    }
+
+    #printSection table {
+      margin-top: 20px;
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    #printSection th {
+      background-color: #ebf8ff;
+      color: #2c5282;
+      padding: 12px;
+      text-align: center;
+    }
+
+    #printSection td {
+      padding: 12px;
+      text-align: center;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>Đặt Hàng - Shop Thời Trang IconDenim </h2>
+
+    <div class="form-group">
+      <label for="supplier">Nhà cung cấp <span class="required">*</span></label>
+      <input type="text" id="supplier" placeholder="VD: Công ty Vải May" required>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email <span class="required">*</span></label>
+      <input type="email" id="email" placeholder="VD: email@cungcap.com" required>
+    </div>
+
+    <div class="form-group">
+      <label for="address">Địa chỉ <span class="required">*</span></label>
+      <input type="text" id="address" placeholder="VD: 123 Đường Nguyễn Huệ, Quận 1" required>
+    </div>
+
+    <div class="form-group">
+      <label for="expectedDate">Ngày nhận mong muốn <span class="required">*</span></label>
+      <input type="date" id="expectedDate" required>
+    </div>
+
+    <div class="form-group">
+      <label for="staffer">Nhân viên thực hiện <span class="required">*</span></label>
+      <input type="text" id="staffer" placeholder="VD: Nguyễn Văn A">
+    </div>
+
+    <table id="inputTable">
+      <thead>
+        <tr>
+          <th>Sản phẩm</th>
+          <th>Số lượng</th>
+          <th>Đơn giá (VNĐ)</th>
+          <th>Thành tiền</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="inputBody"></tbody>
+    </table>
+
+    <button class="btn" onclick="addProduct()">Thêm sản phẩm</button>
+
+    <div class="total">Tổng tiền: <span id="totalPrice">0</span> VNĐ</div>
+
+    <button class="btn" style="background-color: #38a169;" onclick="handlePrint()">Gửi đơn hàng cho nhà cung cấp</button>
+
+    <button class="btn" style="background-color: #38a169;" onclick="handlePrint()">In đơn hàng</button>
+
+
+    <div style="padding-top: 1rem;">
+      Hệ thống lưu lại đơn hàng để xác minh sau này. Các trường bắt buộc có dấu <span class="required">*</span>.
+    </div>
+  </div>
+
+  <!-- Phần hiển thị khi in -->
+  <div id="printSection" style="display: none; padding: 40px;">
+    <h3 style="text-align: center;">ĐƠN ĐẶT HÀNG</h3>
+    <p><strong>Mã đơn hàng:</strong> <span id="printOrderCode"></span></p>
+    <p><strong>Ngày in:</strong> <span id="printDate"></span></p>
+    <p><strong>Nhà cung cấp:</strong> <span id="printSupplier"></span></p>
+    <p><strong>Email:</strong> <span id="printEmail"></span></p>
+    <p><strong>Địa chỉ:</strong> <span id="printAddress"></span></p>
+    <p><strong>Ngày nhận mong muốn:</strong> <span id="printExpectedDate"></span></p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Sản phẩm</th>
+          <th>Số lượng</th>
+          <th>Đơn giá (VNĐ)</th>
+          <th>Thành tiền</th>
+        </tr>
+      </thead>
+      <tbody id="printBody"></tbody>
+    </table>
+
+    <div class="total" style="margin-top: 20px;">Tổng tiền: <span id="printTotal">0</span> VNĐ</div>
+  </div>
+
+  <script>
+    function addProduct(name = "", qty = 1, price = 0) {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td><input type="text" value="${name}" oninput="calculateTotal()"></td>
+        <td><input type="number" min="1" value="${qty}" oninput="calculateTotal()"></td>
+        <td><input type="number" min="0" value="${price}" oninput="calculateTotal()"></td>
+        <td class="itemTotal">0</td>
+        <td><button class="btn" onclick="removeRow(this)">❌</button></td>
+      `;
+      document.getElementById("inputBody").appendChild(row);
+      calculateTotal();
+    }
+
+    function removeRow(btn) {
+      btn.closest("tr").remove();
+      calculateTotal();
+    }
+
+    function calculateTotal() {
+      let total = 0;
+      const rows = document.querySelectorAll("#inputBody tr");
+      rows.forEach(row => {
+        const qty = parseInt(row.children[1].children[0].value) || 0;
+        const price = parseFloat(row.children[2].children[0].value) || 0;
+        const sum = qty * price;
+        row.children[3].textContent = sum.toLocaleString();
+        total += sum;
+      });
+      document.getElementById("totalPrice").textContent = total.toLocaleString();
+    }
+
+    function generateOrderCode() {
+      const now = new Date();
+      return `DH-${now.getFullYear()}${(now.getMonth()+1).toString().padStart(2,'0')}${now.getDate().toString().padStart(2,'0')}-${Math.floor(Math.random() * 900 + 100)}`;
+    }
+
+    function handlePrint() {
+      const code = generateOrderCode();
+      const date = new Date().toLocaleDateString("vi-VN", {
+        weekday: "long", year: "numeric", month: "long", day: "numeric"
+      });
+
+      // Lấy thông tin
+      const supplier = document.getElementById("supplier").value;
+      const email = document.getElementById("email").value;
+      const address = document.getElementById("address").value;
+      const expectedDate = document.getElementById("expectedDate").value;
+
+      // Đổ thông tin vào vùng in
+      document.getElementById("printOrderCode").textContent = code;
+      document.getElementById("printDate").textContent = date;
+      document.getElementById("printSupplier").textContent = supplier;
+      document.getElementById("printEmail").textContent = email;
+      document.getElementById("printAddress").textContent = address;
+      document.getElementById("printExpectedDate").textContent = expectedDate;
+
+      // Tạo bảng sản phẩm
+      const tbody = document.getElementById("printBody");
+      tbody.innerHTML = "";
+      let total = 0;
+      document.querySelectorAll("#inputBody tr").forEach(row => {
+        const name = row.children[0].children[0].value;
+        const qty = row.children[1].children[0].value;
+        const price = row.children[2].children[0].value;
+        const sum = qty * price;
+        total += sum;
+
+        const printRow = document.createElement("tr");
+        printRow.innerHTML = `
+          <td>${name}</td>
+          <td>${qty}</td>
+          <td>${parseInt(price).toLocaleString()}</td>
+          <td>${sum.toLocaleString()}</td>
+        `;
+        tbody.appendChild(printRow);
+      });
+
+      document.getElementById("printTotal").textContent = total.toLocaleString();
+      document.getElementById("printSection").style.display = "block";
+
+      window.print();
+    }
+
+    window.onload = () => {
+      addProduct("Áo sơ mi trắng", 10, 200000);
+      addProduct("Quần jeans đen", 5, 350000);
+    };
+  </script>
+</body>
+</html>

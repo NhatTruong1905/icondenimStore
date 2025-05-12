@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Phân Loại Hàng - Shop Thời Trang</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        /* Cấu trúc cơ bản */
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            background-image: url('https://res.cloudinary.com/dwc0l2bty/image/upload/v1744347430/snapedit_1744347405949_eluizm.png');
+            background-size: cover;
+            /* Phủ toàn bộ màn hình */
+            background-position: center;
+            /* Căn giữa ảnh */
+            background-repeat: no-repeat;
+            /* Không lặp lại ảnh */
+            background-attachment: fixed;
+            /* Cố định ảnh khi cuộn */
+            color: #4a5568;
+            box-sizing: border-box;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 40px 20px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #5a3e36;
+            /* Tông nâu sang trọng */
+            margin-bottom: 30px;
+            font-size: 36px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+            text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1), 0 0 25px rgba(0, 0, 0, 0.1);
+            /* Đổ bóng mềm */
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background-color: #a1866f;
+            /* Nâu nhạt nổi bật */
+            border-radius: 2px;
+        }
+
+
+
+        /* Thanh điều hướng */
+        nav {
+            background-color: #2b6cb0;
+            color: white;
+            padding: 10px 0;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li {
+            margin: 0 20px;
+        }
+
+        nav ul li a {
+            color: white;
+            font-size: 18px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        nav ul li a:hover {
+            color: #3182ce;
+        }
+
+        /* Bộ lọc sản phẩm */
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        select,
+        .btn {
+            padding: 12px 20px;
+            border-radius: 10px;
+            border: 1px solid #cbd5e0;
+            background-color: #edf2f7;
+            font-size: 16px;
+            color: #4a5568;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        select:hover,
+        .btn:hover {
+            border-color: #3182ce;
+            background-color: #e2e8f0;
+        }
+
+        .btn {
+            background-color: #2b6cb0;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        /* Grid sản phẩm */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 5px;
+            margin-top: 30px;
+        }
+
+        .product-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        .product-info h4 {
+            margin: 5px 0;
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3748;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+        }
+
+        .product-info p {
+            color: #718096;
+            font-size: 14px;
+            margin-top: 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+        }
+
+        .price {
+            color: #e53e3e;
+            font-weight: 700;
+            font-size: 18px;
+            margin-top: 15px;
+            align-self: flex-end;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Thêm hiệu ứng hover */
+        .product-card:hover .product-info h4 {
+            color: #2b6cb0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Phân Loại Hàng</h2>
+
+        <div class="filters">
+            <select id="typeFilter">
+                <option value="all">Tất cả loại</option>
+                <option value="áo">Áo</option>
+                <option value="quần">Quần</option>
+                <option value="phụ kiện">Phụ kiện</option>
+            </select>
+
+            <select id="colorFilter">
+                <option value="all">Tất cả màu</option>
+                <option value="trắng">Trắng</option>
+                <option value="đen">Đen</option>
+                <option value="xanh">Xanh</option>
+            </select>
+
+            <select id="sizeFilter">
+                <option value="all">Tất cả size</option>
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+            </select>
+
+            <select id="sortFilter">
+                <option value="default">Sắp xếp theo</option>
+                <option value="asc">Giá tăng dần</option>
+                <option value="desc">Giá giảm dần</option>
+            </select>
+
+            <button class="btn" onclick="renderProducts()">Lọc sản phẩm</button>
+        </div>
+
+        <div class="product-grid" id="productGrid"></div>
+    </div>
+
+    <script>
+        const products = [
+            { name: "Áo sơ mi trắng nam", type: "áo", size: "M", color: "trắng", price: 200000, description: "Áo sơ mi trắng với chất liệu cotton thoáng mát, phù hợp cho các buổi tiệc hay gặp mặt.", image: "https://res.cloudinary.com/dwc0l2bty/image/upload/v1744197989/ao-so-mi-nam-bycotton-trang-art-nhan_8ec622a241ea4deb93a02bdbdcb87954_ybpsrr.webp" },
+            { name: "Áo thun đen nam", type: "áo", size: "L", color: "đen", price: 150000, description: "Áo thun đen cổ tròn, dễ phối đồ, phù hợp với nhiều phong cách.", image: "https://res.cloudinary.com/dwc0l2bty/image/upload/v1744198429/CDL10_1_qlernx.jpg" },
+            { name: "Quần jeans xanh", type: "quần", size: "M", color: "xanh", price: 300000, description: "Quần jeans nam với thiết kế hiện đại, vải denim bền đẹp.", image: "https://res.cloudinary.com/dwc0l2bty/image/upload/v1744198545/quan-jeans-slimfit-qj048-mau-xanh-16793_fzsm5m.jpg" },
+            { name: "Phụ kiện thời trang", type: "phụ kiện", size: "M", color: "đen", price: 80000, description: "Phụ kiện thời trang, giúp tạo điểm nhấn cho bộ trang phục của bạn.", image: "https://res.cloudinary.com/dwc0l2bty/image/upload/v1744198545/kinh-mat-nam-cao-cap-elly-homme-ekm105-2_dxyhsw.jpg" },
+            { name: "Quần short trắng nam", type: "quần", size: "S", color: "trắng", price: 180000, description: "Quần short trắng thoáng mát, rất thích hợp cho mùa hè.", image: "https://res.cloudinary.com/dwc0l2bty/image/upload/v1744198544/6391_quan-short-jean-nam-aristino-cotton-regular-fit-ajhm03az_a25654db2240408dab9ec6c0c85be38a_d85ma6.webp" },
+            { name: "Áo khoác xanh", type: "áo", size: "L", color: "xanh", price: 400000, description: "Áo khoác nam xanh dương với kiểu dáng năng động, phù hợp cho mùa đông.", image: "https://res.cloudinary.com/dwc0l2bty/image/upload/v1744198544/ao-khoac-nam-co-dung-bhg-16-new_xigmcu.jpg" },
+            { name: "Áo sơ mi đen nữ", type: "áo", size: "S", color: "đen", price: 220000, description: "Áo sơ mi đen nữ, thiết kế thanh lịch và dễ phối đồ.", image: "https://res.cloudinary.com/dwc0l2bty/image/upload/v1744200548/ayye_0f8137d2b11a40de9c6418be2e5c7ba4_master_m9hox6.webp" },
+            { name: "Quần jean nữ", type: "quần", size: "L", color: "xanh", price: 250000, description: "Quần jean nữ vừa vặn, phù hợp cho các dịp đi chơi hoặc dạo phố.", image: "https://res.cloudinary.com/dwc0l2bty/image/upload/v1744200549/1.2.21.1.24.003.124.01.30600015_1__4_wpfetm.jpg" }
+        ];
+
+        const grid = document.getElementById("productGrid");
+
+        function renderProducts() {
+            const type = document.getElementById("typeFilter").value;
+            const size = document.getElementById("sizeFilter").value;
+            const color = document.getElementById("colorFilter").value;
+            const sort = document.getElementById("sortFilter").value;
+
+            let filtered = [...products];
+
+            if (type !== "all") filtered = filtered.filter(p => p.type === type);
+            if (size !== "all") filtered = filtered.filter(p => p.size === size);
+            if (color !== "all") filtered = filtered.filter(p => p.color === color);
+
+            if (sort === "asc") filtered.sort((a, b) => a.price - b.price);
+            if (sort === "desc") filtered.sort((a, b) => b.price - a.price);
+
+            grid.innerHTML = "";
+            filtered.forEach(p => {
+                const card = document.createElement("div");
+                card.className = "product-card";
+                card.innerHTML = `
+          <img src="${p.image}" alt="${p.name}">
+          <div class="product-info">
+            <h4>${p.name}</h4>
+            <p>${p.description}</p>
+            <div class="price">${p.price.toLocaleString()} VNĐ</div>
+          </div>
+        `;
+                grid.appendChild(card);
+            });
+        }
+
+        document.querySelectorAll("select").forEach(sel => {
+            sel.addEventListener("change", renderProducts);
+        });
+
+        window.onload = renderProducts;
+    </script>
+</body>
+
+</html>

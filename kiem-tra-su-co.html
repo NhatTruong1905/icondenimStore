@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Kiểm Tra Sự Cố - Shop Thời Trang</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-image: url('https://res.cloudinary.com/dwc0l2bty/image/upload/v1744347430/snapedit_1744347405949_eluizm.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: #4a5568;
+      box-sizing: border-box;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #5a3e36;
+      margin-bottom: 30px;
+      font-size: 36px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      position: relative;
+      display: inline-block;
+      padding-bottom: 10px;
+      text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1), 0 0 25px rgba(0, 0, 0, 0.1);
+    }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background-color: #a1866f;
+      border-radius: 2px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    input {
+      padding: 10px;
+      border: 1px solid #cbd5e0;
+      border-radius: 8px;
+      width: 100%;
+    }
+
+    .btn {
+      padding: 10px 18px;
+      background-color: #3182ce;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #2b6cb0;
+    }
+
+    .search-box {
+      display: flex;
+      gap: 10px;
+    }
+
+    .order-info {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #edf2f7;
+      border-radius: 10px;
+    }
+
+    .order-info p {
+      margin: 5px 0;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 10px;
+      border: 1px solid #e2e8f0;
+      text-align: center;
+    }
+
+    th {
+      background-color: #ebf8ff;
+      color: #2c5282;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>Kiểm Tra Sự Cố</h2>
+
+    <div class="form-group">
+      <label for="searchInput">Nhập mã đơn hàng:</label>
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="VD: DH001" />
+        <button class="btn" onclick="searchOrder()">Tìm</button>
+      </div>
+    </div>
+
+    <div id="orderDetail" class="order-info" style="display: none;">
+      <h3>Thông tin đơn hàng</h3>
+      <p><strong>Mã đơn hàng:</strong> <span id="orderId"></span></p>
+      <p><strong>Khách hàng:</strong> <span id="customer"></span></p>
+      <p><strong>Địa chỉ:</strong> <span id="address"></span></p>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Mã SP</th>
+          <th>Tên sản phẩm</th>
+          <th>Số lượng</th>
+          <th>Ngày mua</th>
+          <th>Ghi chú</th>
+        </tr>
+      </thead>
+      <tbody id="productList">
+        <!-- Nội dung được cập nhật bằng JS -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    const orders = {
+      DH001: {
+        customer: "Nguyễn Văn A",
+        address: "Hà Nội",
+        products: [
+          { id: "SP001", name: "Áo Thun Trơn", quantity: 2, date: "2025-04-10", note: "Hàng lỗi chỉ nhỏ" },
+          { id: "SP002", name: "Quần Jean", quantity: 1, date: "2025-04-10", note: "Giao nhầm size" },
+        ]
+      },
+      DH002: {
+        customer: "Lê Thị B",
+        address: "Hải Phòng",
+        products: [
+          { id: "SP003", name: "Đầm Dạ Hội", quantity: 1, date: "2025-04-12", note: "Không đúng màu" },
+          { id: "SP004", name: "Áo Khoác Dạ", quantity: 2, date: "2025-04-12", note: "Giao chậm" }
+        ]
+      },
+      DH003: {
+        customer: "Trần Văn C",
+        address: "Đà Nẵng",
+        products: [
+          { id: "SP005", name: "Áo Sơ Mi", quantity: 3, date: "2025-04-14", note: "" },
+          { id: "SP006", name: "Giày Sneaker", quantity: 1, date: "2025-04-14", note: "Thiếu phụ kiện" }
+        ]
+      }
+    };
+
+    function renderProducts(products) {
+      const tbody = document.getElementById("productList");
+      tbody.innerHTML = "";
+      products.forEach(p => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${p.id}</td>
+          <td>${p.name}</td>
+          <td>${p.quantity}</td>
+          <td>${p.date}</td>
+          <td>${p.note}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function searchOrder() {
+      const code = document.getElementById("searchInput").value.trim().toUpperCase();
+      const infoBox = document.getElementById("orderDetail");
+
+      if (orders[code]) {
+        document.getElementById("orderId").textContent = code;
+        document.getElementById("customer").textContent = orders[code].customer;
+        document.getElementById("address").textContent = orders[code].address;
+        infoBox.style.display = "block";
+        renderProducts(orders[code].products);
+      } else {
+        infoBox.style.display = "none";
+        renderProducts([]);
+      }
+    }
+
+    // Hiển thị tất cả sản phẩm ban đầu
+    let allProducts = [];
+    Object.values(orders).forEach(order => {
+      allProducts = allProducts.concat(order.products);
+    });
+    renderProducts(allProducts);
+  </script>
+</body>
+
+</html>

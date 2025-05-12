@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Kiểm Tra Tồn Kho - Shop Thời Trang</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-image: url('https://res.cloudinary.com/dwc0l2bty/image/upload/v1744347430/snapedit_1744347405949_eluizm.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: #4a5568;
+      box-sizing: border-box;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+    }
+
+    h2 {
+      color: #5a3e36;
+      margin-bottom: 30px;
+      font-size: 30px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      position: relative;
+      display: inline-block;
+      padding-bottom: 10px;
+      text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1), 0 0 25px rgba(0, 0, 0, 0.1);
+    }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background-color: #a1866f;
+      border-radius: 2px;
+    }
+
+    label {
+      font-weight: 600;
+    }
+
+    input,
+    select {
+      padding: 10px;
+      border: 1px solid #cbd5e0;
+      border-radius: 8px;
+      font-size: 15px;
+      background-color: #edf2f7;
+      width: 100%;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 12px;
+      border: 1px solid #e2e8f0;
+      text-align: center;
+    }
+
+    th {
+      background-color: #ebf8ff;
+      color: #2c5282;
+    }
+
+    .btn {
+      padding: 10px 18px;
+      background-color: #2b6cb0;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 10px;
+    }
+
+    .btn:hover {
+      background-color: #3182ce;
+    }
+
+    .view-details-btn {
+      padding: 8px 14px;
+      background-color: #38a169;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .view-details-btn:hover {
+      background-color: #2f855a;
+    }
+
+    .filters {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+
+    /* Style for the details section */
+    .details-row {
+      background-color: #f7fafc;
+      font-size: 14px;
+      padding: 10px;
+      display: none;
+    }
+
+    .details-row.active {
+      display: table-row;
+    }
+
+    .details-content {
+      text-align: left;
+      padding-left: 20px;
+    }
+
+    .details-content p {
+      margin: 5px 0;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>Kiểm Tra Tồn Kho - Shop Thời Trang IconDenim</h2>
+
+
+    <!-- Tìm kiếm -->
+    <div class="form-group">
+      <label for="product" style="margin-bottom: 100px;">Tìm theo tên sản phẩm</label>
+      <input type="text" id="product" placeholder="Nhập tên sản phẩm để tìm kiếm">
+    </div>
+    <button class="btn" onclick="filterInventory()">Tìm kiếm</button>
+
+    <!-- Bảng tồn kho -->
+    <table id="inventoryTable">
+      <thead>
+        <tr>
+          <th>Sản phẩm</th>
+          <th>Kích cỡ</th>
+          <th>Số lượng tồn kho</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="inventoryBody"></tbody>
+    </table>
+
+    <!-- Tổng tồn kho -->
+    <div class="total" style="font-weight: bold;">
+      Tổng số sản phẩm tồn kho: <span id="totalInventory">0</span> sản phẩm
+    </div>
+
+    <!-- Lưu -->
+    <button class="btn" style="background-color: #38a169;" onclick="saveInventory()">Lưu kết quả đã kiểm tra</button>
+  </div>
+
+  <script>
+    const inventory = [
+      { name: "Áo thun nam", type: "áo", size: "M", stock: 50, price: 150000, description: "Áo thun nam chất liệu cotton thoáng mát.", sold: 120 },
+      { name: "Quần jean nữ", type: "quần", size: "L", stock: 30, price: 200000, description: "Quần jean nữ form dáng trẻ trung.", sold: 75 },
+      { name: "Phụ kiện túi xách", type: "phụ kiện", size: "all", stock: 100, price: 300000, description: "Túi xách thời trang, chất liệu cao cấp.", sold: 200 },
+      { name: "Váy hoa mùa hè", type: "áo", size: "S", stock: 20, price: 250000, description: "Váy hoa nữ nhẹ nhàng, phù hợp cho mùa hè.", sold: 50 },
+      { name: "Áo khoác nam", type: "áo", size: "XL", stock: 10, price: 400000, description: "Áo khoác nam phong cách thời trang.", sold: 35 },
+    ];
+
+    function displayInventory(items) {
+      const inventoryBody = document.getElementById("inventoryBody");
+      inventoryBody.innerHTML = "";
+      items.forEach(item => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${item.name}</td>
+          <td>${item.size}</td>
+          <td>${item.stock}</td>
+          <td><button class="view-details-btn" onclick="viewInventoryDetails('${item.name}')">Chi tiết sản phẩm</button></td>
+        `;
+        inventoryBody.appendChild(row);
+
+        const detailsRow = document.createElement("tr");
+        detailsRow.classList.add("details-row");
+        detailsRow.innerHTML = `
+          <td colspan="4">
+            <div class="details-content">
+              <p><strong>Giá:</strong> ${item.price} VND</p>
+              <p><strong>Mô tả:</strong> ${item.description}</p>
+              <p><strong>Số lượng đã bán:</strong> ${item.sold}</p>
+            </div>
+          </td>
+        `;
+        inventoryBody.appendChild(detailsRow);
+      });
+      calculateTotalInventory();
+    }
+
+    function calculateTotalInventory() {
+      const rows = document.querySelectorAll("#inventoryBody tr");
+      let total = 0;
+      rows.forEach(row => {
+        if (!row.classList.contains('details-row')) {
+          total += parseInt(row.children[2].textContent) || 0;
+        }
+      });
+      document.getElementById("totalInventory").textContent = total;
+    }
+
+    function viewInventoryDetails(productName) {
+      const productRows = document.querySelectorAll("#inventoryBody tr");
+      productRows.forEach(row => {
+        if (row.children[0].textContent === productName) {
+          const detailsRow = row.nextElementSibling;
+          detailsRow.classList.toggle("active");
+        }
+      });
+    }
+
+    function saveInventory() {
+      alert("Kết quả kiểm tra tồn kho đã được lưu.");
+    }
+
+    function filterInventory() {
+      const name = document.getElementById("product").value.toLowerCase();
+      const type = document.getElementById("typeFilter").value;
+      const size = document.getElementById("sizeFilter").value;
+
+      const filtered = inventory.filter(item =>
+        (type === "all" || item.type === type) &&
+        (size === "all" || item.size === size) &&
+        item.name.toLowerCase().includes(name)
+      );
+
+      displayInventory(filtered);
+    }
+
+    // Khởi tạo ban đầu
+    displayInventory(inventory);
+  </script>
+</body>
+
+</html>

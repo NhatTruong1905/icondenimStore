@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Thống Kê và Báo Cáo - Shop Thời Trang</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-image: url('https://res.cloudinary.com/dwc0l2bty/image/upload/v1744347430/snapedit_1744347405949_eluizm.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: #4a5568;
+      box-sizing: border-box;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+    }
+
+    h2 {
+      text-align: center;
+      color: #5a3e36;
+      margin-bottom: 30px;
+      font-size: 36px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      position: relative;
+      display: inline-block;
+      padding-bottom: 10px;
+      text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1), 0 0 25px rgba(0, 0, 0, 0.1);
+    }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background-color: #a1866f;
+      border-radius: 2px;
+    }
+
+    .filters {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 30px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .form-group {
+      flex: 1;
+      min-width: 200px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    input,
+    select {
+      padding: 10px 12px;
+      border: 1px solid #cbd5e0;
+      border-radius: 8px;
+      font-size: 15px;
+      background-color: #edf2f7;
+      height: 40px;
+      box-sizing: border-box;
+    }
+
+    select:hover {
+      border-color: #3182ce;
+      background-color: #e2e8f0;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 12px;
+      border: 1px solid #e2e8f0;
+      text-align: center;
+    }
+
+    th {
+      background-color: #ebf8ff;
+      color: #2c5282;
+    }
+
+    .btn-report {
+        margin-top: 2rem;
+      height: 40px;
+      padding: 0 20px;
+      font-size: 15px;
+      border-radius: 8px;
+      border: none;
+      background-color: #3182ce;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      align-self: flex-start;
+    }
+
+    .btn-report:hover {
+      background-color: #2b6cb0;
+    }
+
+    #orderDetail,
+    #incidentLog {
+      display: none;
+    }
+
+    #orderDetail,
+    #incidentLog {
+      margin-top: 40px;
+    }
+
+    #orderDetail {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-show-incident {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #ed8936;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .btn-show-incident:hover {
+      background-color: #fbd38d;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>Thống Kê và Báo Cáo</h2>
+
+    <!-- Tìm kiếm -->
+    <div class="filters">
+      <div class="form-group">
+        <label for="searchOrder">Tìm kiếm:</label>
+        <input type="text" id="searchOrder" placeholder="Nhập mã đơn hàng, khách hàng, sản phẩm..." />
+      </div>
+
+      <div class="form-group">
+        <label for="searchCategory">Lọc theo danh mục:</label>
+        <select id="searchCategory">
+          <option value="">Chọn danh mục</option>
+          <option value="order">Đơn hàng</option>
+          <option value="customer">Khách hàng</option>
+          <option value="product">Sản phẩm</option>
+        </select>
+      </div>
+
+      <button class="btn-report" onclick="searchData()">Tìm Kiếm</button>
+    </div>
+
+    <!-- Bảng kết quả tìm kiếm -->
+    <table id="resultTable">
+      <thead>
+        <tr>
+          <th>Mã</th>
+          <th>Tên</th>
+          <th>Ngày</th>
+          <th>Thông tin</th>
+        </tr>
+      </thead>
+      <tbody id="resultBody">
+        <!-- Nội dung tìm kiếm sẽ được cập nhật bằng JS -->
+      </tbody>
+    </table>
+
+    <button class="btn-report" onclick="generateReport()">Lập Báo Cáo</button>
+  </div>
+
+  <script>
+    const orders = {
+      DH001: {
+        customer: "Nguyễn Văn A",
+        address: "Hà Nội",
+        products: [
+          { id: "SP001", name: "Áo Thun Trơn", quantity: 2, date: "2025-04-10" },
+          { id: "SP002", name: "Quần Jean", quantity: 1, date: "2025-04-10" }
+        ]
+      },
+      DH002: {
+        customer: "Lê Thị B",
+        address: "Hải Phòng",
+        products: [
+          { id: "SP003", name: "Đầm Dạ Hội", quantity: 1, date: "2025-04-12" },
+          { id: "SP004", name: "Áo Khoác Dạ", quantity: 2, date: "2025-04-12" }
+        ]
+      },
+    };
+
+    const customers = [
+      { id: "KH001", name: "Nguyễn Văn A", address: "Hà Nội" },
+      { id: "KH002", name: "Lê Thị B", address: "Hải Phòng" }
+    ];
+
+    const products = [
+      { id: "SP001", name: "Áo Thun Trơn", price: 250000, stock: 50 },
+      { id: "SP002", name: "Quần Jean", price: 350000, stock: 30 },
+      { id: "SP003", name: "Đầm Dạ Hội", price: 800000, stock: 20 },
+      { id: "SP004", name: "Áo Khoác Dạ", price: 400000, stock: 40 }
+    ];
+
+    function searchData() {
+      const searchTerm = document.getElementById("searchOrder").value.trim().toLowerCase();
+      const category = document.getElementById("searchCategory").value;
+      let results = [];
+
+      if (category === "order" || category === "") {
+        Object.keys(orders).forEach(orderId => {
+          if (orderId.toLowerCase().includes(searchTerm) || orders[orderId].customer.toLowerCase().includes(searchTerm)) {
+            results.push({ type: "Đơn Hàng", id: orderId, name: orders[orderId].customer, date: orders[orderId].products[0].date, info: `Địa chỉ: ${orders[orderId].address}` });
+          }
+        });
+      }
+
+      if (category === "customer" || category === "") {
+        customers.forEach(customer => {
+          if (customer.name.toLowerCase().includes(searchTerm)) {
+            results.push({ type: "Khách Hàng", id: customer.id, name: customer.name, date: "", info: `Địa chỉ: ${customer.address}` });
+          }
+        });
+      }
+
+      if (category === "product" || category === "") {
+        products.forEach(product => {
+          if (product.name.toLowerCase().includes(searchTerm)) {
+            results.push({ type: "Sản Phẩm", id: product.id, name: product.name, date: "", info: `Giá: ${product.price} VND, Kho: ${product.stock}` });
+          }
+        });
+      }
+
+      displayResults(results);
+    }
+
+    function displayResults(results) {
+      const resultBody = document.getElementById("resultBody");
+      resultBody.innerHTML = "";
+      results.forEach(result => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${result.id}</td>
+          <td>${result.name}</td>
+          <td>${result.date || "N/A"}</td>
+          <td>${result.info}</td>
+        `;
+        resultBody.appendChild(tr);
+      });
+    }
+
+    function generateReport() {
+      const results = Array.from(document.getElementById("resultBody").getElementsByTagName("tr"));
+      if (results.length === 0) {
+        alert("Không có dữ liệu để báo cáo!");
+        return;
+      }
+
+      let content = "<h2>BÁO CÁO TÌM KIẾM</h2><table border='1' style='width:100%; border-collapse: collapse;'>";
+      content += "<thead><tr><th>Mã</th><th>Tên</th><th>Ngày</th><th>Thông tin</th></tr></thead><tbody>";
+
+      results.forEach(row => {
+        content += `<tr>${row.innerHTML}</tr>`;
+      });
+
+      content += "</tbody></table>";
+
+      const win = window.open('', '', 'width=800,height=600');
+      win.document.write(content);
+      win.document.close();
+      win.print();
+    }
+  </script>
+</body>
+
+</html>
